@@ -1,0 +1,347 @@
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var canvas = $("#myCanvas");
+			var context = canvas.get(0).getContext("2d");
+
+			var goku=
+			{
+				image: "goku6x1.png",
+				health:       100,
+				hitting: 		0,
+				standing:		0,
+				crouching:		1,
+				jumping:		2,
+				punching: 		3,
+				kicking: 		4,
+				charging: 		5,
+				posx:			0,
+				posy:			100,
+				state: 			0
+			};
+
+			var goku2 =
+			{
+				image: "goku6x1reverse.png",
+				health:       100,
+				hitting: 		0,
+				standing:		0,
+				crouching:		1,
+				jumping:		2,
+				punching: 		3,
+				kicking: 		4,
+				charging: 		5,
+				posx:			400,
+				posy:			100,
+				state: 			0
+			};
+
+			var healthgoku = new Image();
+				healthgoku.src = "gokuhealth.png";
+				healthgoku.addEventListener("load",render,false);
+
+			var healthgoku2 = new Image();
+				healthgoku2.src = "gokuhealthreverse.png";
+				healthgoku2.addEventListener("load",render,false);
+
+			var background = new Image();
+			background.src = "overworld.png";
+			background.onload = function(){
+				context.drawImage(background,0,0);
+				};
+
+			var gokuImage = new Image();
+			gokuImage.addEventListener("load", render, false);
+			gokuImage.src = goku.image;
+
+			var goku2Image = new Image();
+			goku2Image.addEventListener("load", render, false);
+			goku2Image.src = goku2.image;
+
+			window.addEventListener("keydown", keydownHandler, false);
+			window.addEventListener("keyup",keyupHandler,false);
+
+			function keyupHandler() {
+			    context.clearRect(0,0,500,200);
+				goku.state = goku.standing;
+				goku2.state = goku2.standing;
+				context.drawImage(background,0,0);
+				render();
+			}
+
+			function hitDetection1(){
+
+					if(goku.hitting==3){
+					goku.health+=10
+					if(goku.health>100){
+					goku.health = 100;
+					}
+					}
+				if(goku2.posx-goku.posx<=40)
+				{
+					if(goku.hitting == 1){
+					goku2.health= goku2.health -= 10;
+					}
+					else if(goku.hitting ==2){
+					goku2.health -=20;
+					}
+
+				}
+				if(goku2.health<=0){
+				alert("player1 won");
+				goku2.posx = 400;
+				goku2.health= 100
+				goku.posx = 0;
+				goku.health = 100;
+				goku.state = goku.standing;
+				goku2.state = goku2.standing;
+				render();
+
+				}
+				goku.hitting = 0;
+			}
+
+
+			function hitDetection2(){
+			if(goku2.hitting==3){
+					goku2.health+=10
+					if(goku2.health>100){
+					goku2.health = 100;
+
+					}
+				}
+			if(goku2.posx-goku.posx<=40)
+				{
+					if(goku2.hitting == 1){
+					goku.health= goku.health -= 10;
+					}
+					else if(goku2.hitting ==2){
+					goku.health =goku.health - 20;
+					}
+
+				}
+				if(goku.health<=0){
+				alert("player2 won");
+				goku2.posx = 400;
+				goku2.health= 100
+				goku.posx = 0;
+				goku.health = 100;
+				goku.state = goku.standing;
+				goku2.state = goku2.standing;
+				render();
+				}
+				goku2.hitting = 0;
+			}
+
+
+
+			function keydownHandler(event) {
+
+                switch (event.keyCode) {
+                    case 90:   	goku.state = goku.punching;
+					            goku.hitting = 1;
+								hitDetection1();
+                                break;
+                    case 88:   	goku.state = goku.kicking;
+								goku.hitting = 2;
+								hitDetection1();
+
+                                break;
+                    case 67:   	goku.state = goku.charging;
+								goku.hitting = 3;
+								hitDetection1();
+                                break;
+					case 68:	//right
+								goku.posx+=10;
+								if(goku.posx >=400){
+								goku.posx = 400;
+								}
+								render();
+								break;
+					case 65:	//left
+								goku.posx-=10;
+								if(goku.posx <=0 ){
+								goku.posx= 0;
+								}
+
+
+								render();
+								break;
+					case 87:	//upw
+								goku.state = goku.jumping;
+								break;
+					case 83:	//down
+								goku.state = goku.crouching;
+                                break;
+
+
+
+					//goku2
+                    case 74:   	goku2.state = goku2.punching;
+								goku2.hitting = 1;
+								hitDetection2();
+                                break;
+                    case 75:   	goku2.state = goku2.kicking;
+								goku2.hitting = 2;
+								hitDetection2();
+                                break;
+                    case 76:   	goku2.state = goku2.charging;
+								goku2.hitting = 3;
+                                hitDetection2();
+								break;
+					case 39:	//right
+								goku2.posx+=10;
+								if(goku2.posx >=400){
+								goku2.posx = 400;
+								}
+								render();
+								break;
+					case 37:	//left
+								goku2.posx-=10;
+									if(goku2.posx <=0 ){
+								goku2.posx= 0;
+								}
+								render();
+								break;
+					case 38:	//up
+								goku2.state = goku2.jumping;
+								break;
+					case 40:	//down
+								goku2.state = goku2.crouching;
+                                break;
+                    default:	goku.state = goku.standing;
+								goku2.state = goku2.standing;
+                                break;
+                }
+
+				context.clearRect(0,0,500,200);
+				context.drawImage(background,0,0);
+				render();
+			}
+
+			function render() {
+			//health bars
+			if(goku.health>90)
+			{context.drawImage(healthgoku,12, 12, 275, 25, 10,10,270,15);}
+			else if(goku.health==90)
+			{context.drawImage(healthgoku,12, 40, 275, 25, 10,10,270,15);}
+			else if(goku.health==80)
+			{context.drawImage(healthgoku,12, 68, 275, 25, 10,10,270,15);}
+			else if(goku.health==70)
+			{context.drawImage(healthgoku,12, 92, 275, 25, 10,10,270,15);}
+			else if(goku.health==60)
+			{context.drawImage(healthgoku,12, 123, 275, 25, 10,10,270,15);}
+			else if(goku.health==50)
+			{context.drawImage(healthgoku,12, 151, 275, 25, 10,10,270,15);}
+			else if(goku.health==40)
+			{context.drawImage(healthgoku,12, 179, 275, 25, 10,10,270,15);}
+			else if(goku.health==30)
+			{context.drawImage(healthgoku,12, 207, 275, 25, 10,10,270,15);}
+			else if(goku.health==20)
+			{context.drawImage(healthgoku,12, 235, 275, 25, 10,10,270,15);}
+			else if(goku.health==10)
+			{context.drawImage(healthgoku,12, 263, 275, 25, 10,10,270,15);}
+			else if(goku.health==0)
+			{context.drawImage(healthgoku,12, 291, 275, 25, 10,10,270,15);}
+
+
+
+			if(goku2.health>90)
+			{context.drawImage(healthgoku2,12, 12, 275, 25, 220,27,270,15);}
+			else if(goku2.health==90)
+			{context.drawImage(healthgoku2,12, 40, 275, 25, 220,27,270,15);}
+			else if(goku2.health==80)
+			{context.drawImage(healthgoku2,12, 68, 275, 25, 220,27,270,15);}
+			else if(goku2.health==70)
+			{context.drawImage(healthgoku2,12, 92, 275, 25, 220,27,270,15);}
+			else if(goku2.health==60)
+			{context.drawImage(healthgoku2,12, 123, 275, 25, 220,27,270,15);}
+			else if(goku2.health==50)
+			{context.drawImage(healthgoku2,12, 151, 275, 25, 220,27,270,15);}
+			else if(goku2.health==40)
+			{context.drawImage(healthgoku2,12, 179, 275, 25,220,27,270,15);}
+			else if(goku2.health==30)
+			{context.drawImage(healthgoku2,12, 207, 275, 25, 220,27,270,15);}
+			else if(goku2.health==20)
+			{context.drawImage(healthgoku2,12, 235, 275, 25, 220,27,270,15);}
+			else if(goku2.health==10)
+			{context.drawImage(healthgoku2,12, 263, 275, 25, 220,27,270,15);}
+			else if(goku2.health<=0)
+			{context.drawImage(healthgoku2,12, 291, 275, 25, 220,27,270,15);}
+			//goku positions and states
+				switch(goku.state) {
+					case goku.standing: 	context.drawImage( gokuImage,0, 0, 100, 100,goku.posx, goku.posy, 100, 100 );
+											break;
+					case goku.crouching: 	context.drawImage
+											( gokuImage,
+											100, 0, 100, 100,
+											goku.posx, goku.posy, 100, 100 );
+											break;
+					case goku.jumping: 		context.drawImage
+											( gokuImage,
+											400, 0, 100, 100,
+											goku.posx, goku.posy, 100, 100 );
+											break;
+					case goku.punching: 	context.drawImage
+											( gokuImage,
+											200, 0, 100, 100,
+											goku.posx, goku.posy, 100, 100 );
+											break;
+					case goku.kicking: 		context.drawImage
+											( gokuImage,
+											300, 0, 100, 100,
+											goku.posx, goku.posy, 100, 100 );
+											break;
+					case goku.charging: 	context.drawImage
+											( gokuImage,
+											500, 0, 100, 100,
+											goku.posx, goku.posy, 100, 100 );
+											break;
+					}
+				switch(goku2.state) {
+					case goku2.standing: 	context.drawImage
+											( goku2Image,
+											0, 0, 100, 100,
+											goku2.posx, goku2.posy, 100, 100 );
+											break;
+					case goku2.crouching: 	context.drawImage
+											( goku2Image,
+											100, 0, 100, 100,
+											goku2.posx, goku2.posy, 100, 100 );
+											break;
+					case goku2.jumping: 		context.drawImage
+											( goku2Image,
+											400, 0, 100, 100,
+											goku2.posx, goku2.posy, 100, 100 );
+											break;
+					case goku2.punching: 	context.drawImage
+											( goku2Image,
+											200, 0, 100, 100,
+											goku2.posx, goku2.posy, 100, 100 );
+											break;
+					case goku2.kicking: 		context.drawImage
+											( goku2Image,
+											300, 0, 100, 100,
+											goku2.posx, goku2.posy, 100, 100 );
+											break;
+					case goku2.charging: 	context.drawImage
+											( gokuImage,
+											500, 0, 100, 100,
+											goku2.posx, goku2.posy, 100, 100 );
+											break;
+					}
+			}
+
+		});
+	</script>
+</head>
+<body>
+
+	<canvas id="myCanvas" height="200" width="500"></canvas>
+
+</body>
+</html>
