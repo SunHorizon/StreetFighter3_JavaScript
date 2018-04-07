@@ -8,340 +8,418 @@
 			var canvas = $("#myCanvas");
 			var context = canvas.get(0).getContext("2d");
 
-			var goku=
-			{
-				image: "goku6x1.png",
-				health:       100,
-				hitting: 		0,
-				standing:		0,
-				crouching:		1,
-				jumping:		2,
-				punching: 		3,
-				kicking: 		4,
-				charging: 		5,
-				posx:			0,
-				posy:			100,
-				state: 			0
-			};
+			var CheckChooce = false;
+			var buttonPress = false;
+			var checkCharacter;
 
-			var goku2 =
+			if(CheckChooce == false){
+						// player icon image
+						var player = new Image();
+								player.src = "Player.png";
+								player.onload = function(){
+								context.drawImage(player,0,0,900,120, 5,5,200,150);
+								};
+							// VS icon image
+							var vs = new Image();
+									vs.src = "VS.png";
+									vs.onload = function(){
+									context.drawImage(vs,0,0,300,250, 200,5,200,150);
+										};
+							// CPU icon image
+							var cpu = new Image();
+										cpu.src = "CPU.png";
+										cpu.onload = function(){
+										context.drawImage(cpu,0,0,600,500, 360,5,200,150);
+										};
+
+									// get Mouse Coordinates
+									var mouseX = 0;
+							    var mouseY = 0;
+
+									// ChunLi icon object
+									var ChunLi = {
+												image: "Chun-Li_Icon.jpeg",
+						            sourceX: 50,
+						            sourceY: 200,
+						            sourceWidth: 64,
+						            sourceHeight: 64,
+
+						            //Getters to define the left, right, top and bottom sides, these functions are use to get the parameter of our shape in order to determine whether our mouse falls within
+
+						              left: function() { return this.sourceX; },
+						              right: function() { return (this.sourceX + this.sourceWidth); },
+						              top: function() { return this.sourceY; },
+						              bottom: function() { return (this.sourceY + this.sourceHeight); }
+						          };
+
+											// Makoto icon object
+									var Makoto = {
+													image: "MakotoIcon.jpg",
+													sourceX: 50,
+													sourceY: 300,
+													sourceWidth: 64,
+													sourceHeight: 64,
+
+													//Getters to define the left, right, top and bottom sides, these functions are use to get the parameter of our shape in order to determine whether our mouse falls within
+
+														left: function() { return this.sourceX; },
+												  	right: function() { return (this.sourceX + this.sourceWidth); },
+														top: function() { return this.sourceY; },
+														bottom: function() { return (this.sourceY + this.sourceHeight); }
+													};
+
+
+											// get the  ChunLi image
+											var ChunLiImage = new Image();
+											ChunLiImage.addEventListener("load", render, false);
+											ChunLiImage.src = ChunLi.image;
+
+											// get the  Makoto image
+											var MakotoImage = new Image();
+											MakotoImage.addEventListener("load", render, false);
+											MakotoImage.src = Makoto.image;
+
+
+
+
+										// Check for input from keyboard
+											window.addEventListener("keydown", keydownHandler, false);
+
+											//Add a mousemove event listener
+											  window.addEventListener("mousemove", function(event)
+											   {
+											        //Find the mouse's X and Y positions of our mouse movement
+																				 mouseX = event.pageX ;
+											                   mouseY = event.pageY ;
+											                   //console.log(mouseX + " " + mouseY);
+											                   //keep calling the update function and update canvas object on each movement
+											                   // requestAnimationFrame(update, canvas);
+																				 if(CheckChooce == false){
+																					 update();
+																			 }
+									        }, false);
+
+												//this test whether there is a collision, mouse x/y coordinates fall within the parameter of our shape
+													function hitTestPoint(pointX, pointY) {
+												                    var hit = false;
+																						checkCharacter = 0;
+												                    if(pointX > ChunLi.left()
+												                    && pointX < ChunLi.right()
+												                    && pointY > ChunLi.top()
+												                    && pointY < ChunLi.bottom())
+												                    {
+																							hit = true;
+																							checkCharacter = 1;
+																						}
+																						if(pointX > Makoto.left()
+																					 && pointX < Makoto.right()
+																					 && pointY > Makoto.top()
+																					 && pointY < Makoto.bottom())
+																					 {
+																						 hit = true;
+																						 checkCharacter = 2;
+																					 }
+												                        return hit;
+
+												                     }
+
+										// Checking for key press
+										function keydownHandler(event) {
+													switch (event.keyCode) {
+														// press p
+													case 	80:
+															buttonPress = true;
+															update();
+														break;
+													}
+										}
+
+						   			  function update()
+										  {
+									        //The animation loop
+													//Use hitTestPoint to check for a collision and
+									        //return the result (true or false) to the collision variable
+													   if(hitTestPoint(mouseX, mouseY))
+													  {
+																// if button press = true and mouse collision
+																	if(buttonPress == true){
+																		CheckChooce = true;
+																		// run the play function
+																		message = checkCharacter;
+																		Play(CheckChooce,checkCharacter);
+																		console.log(message);
+																 	}
+												    }
+											      else {
+																buttonPress = false;
+														}
+													  //Render the sprite object
+															 render();
+									 }
+
+								// render the image
+									function render()
+	               {
+										//Draw ChunLi
+										context.drawImage(ChunLiImage,
+										ChunLi.sourceX, ChunLi.sourceY,
+	                  ChunLi.sourceWidth, ChunLi.sourceHeight);
+
+
+										//Draw Makoto
+											context.drawImage(MakotoImage,
+											Makoto.sourceX, Makoto.sourceY,
+											Makoto.sourceWidth, Makoto.sourceHeight);
+								}
+
+						};
+
+								// context.clearRect(0,0,605,800);
+								// context.drawImage(player,0,0);
+
+								// 430, 0, 100, 120,
+								// goku.posx, goku.posy, 150, 150
+
+function Play(CheckChooce,checkCharacter){
+			if(CheckChooce == true){
+				context.clearRect(0,0,605,800);
+
+				ChunLi
+			var CharacterSprite=
 			{
-				image: "goku6x1reverse.png",
-				health:       100,
-				hitting: 		0,
-				standing:		0,
-				crouching:		1,
-				jumping:		2,
-				punching: 		3,
-				kicking: 		4,
-				charging: 		5,
-				posx:			400,
-				posy:			100,
-				state: 			0
+				health:100,
+				hitting:0,
+				standing:0,
+				crouching:1,
+				jumping:2,
+				punching:3,
+				kicking:4,
+				charging:5,
+
+				posx:0,
+				posy:340,
+				state:0
 			};
 
 			var healthgoku = new Image();
 				healthgoku.src = "gokuhealth.png";
 				healthgoku.addEventListener("load",render,false);
 
-			var healthgoku2 = new Image();
-				healthgoku2.src = "gokuhealthreverse.png";
-				healthgoku2.addEventListener("load",render,false);
-
 			var background = new Image();
-			background.src = "overworld.png";
-			background.onload = function(){
+				background.src = "background.png";
+				background.onload = function(){
 				context.drawImage(background,0,0);
 				};
 
-			var gokuImage = new Image();
-			gokuImage.addEventListener("load", render, false);
-			gokuImage.src = goku.image;
+			if(checkCharacter == 1){
+					var CharacterLiImage = new Image();
+					CharacterLiImage.addEventListener("load", render, false);
+					CharacterLiImage.src = "Chun-Li.png";
+			}
 
-			var goku2Image = new Image();
-			goku2Image.addEventListener("load", render, false);
-			goku2Image.src = goku2.image;
+			if(checkCharacter == 2){
+				var CharacterLiImage = new Image();
+				CharacterLiImage.addEventListener("load", render, false);
+				CharacterLiImage.src = "Makoto.png";
+		}
 
 			window.addEventListener("keydown", keydownHandler, false);
 			window.addEventListener("keyup",keyupHandler,false);
-
+			render();
 			function keyupHandler() {
-			    context.clearRect(0,0,500,200);
-				goku.state = goku.standing;
-				goku2.state = goku2.standing;
-				context.drawImage(background,0,0);
-				render();
+					context.clearRect(0,0,605,800);
+					CharacterSprite.state = CharacterSprite.standing;
+					context.drawImage(background,0,0);
+					render();
 			}
+
 
 			function hitDetection1(){
 
-					if(goku.hitting==3){
-					goku.health+=10
-					if(goku.health>100){
-					goku.health = 100;
+					if(CharacterSprite.hitting==3){
+							CharacterSprite.health+=10
+							if(CharacterSprite.health>100){
+									CharacterSprite.health = 100;
+							}
 					}
-					}
-				if(goku2.posx-goku.posx<=40)
-				{
-					if(goku.hitting == 1){
-					goku2.health= goku2.health -= 10;
-					}
-					else if(goku.hitting ==2){
-					goku2.health -=20;
-					}
-
-				}
-				if(goku2.health<=0){
-				alert("player1 won");
-				goku2.posx = 400;
-				goku2.health= 100
-				goku.posx = 0;
-				goku.health = 100;
-				goku.state = goku.standing;
-				goku2.state = goku2.standing;
-				render();
-
-				}
-				goku.hitting = 0;
+				// if(goku2.posx-goku.posx<=40)
+				// {
+				// 		if(goku.hitting == 1){
+				// 		goku2.health= goku2.health -= 10;
+				// 		}
+				// 		else if(goku.hitting ==2){
+				// 		goku2.health -=20;
+				// 		}
+				//
+				// }
+				// if(goku2.health<=0){
+				// 		alert("player1 won");
+				// 		goku2.posx = 400;
+				// 		goku2.health= 100
+				// 		goku.posx = 0;
+				// 		goku.health = 100;
+				// 		goku.state = goku.standing;
+				// 		goku2.state = goku2.standing;
+				// 		render();
+				//
+				// }
+				CharacterSprite.hitting = 0;
 			}
-
-
-			function hitDetection2(){
-			if(goku2.hitting==3){
-					goku2.health+=10
-					if(goku2.health>100){
-					goku2.health = 100;
-
-					}
-				}
-			if(goku2.posx-goku.posx<=40)
-				{
-					if(goku2.hitting == 1){
-					goku.health= goku.health -= 10;
-					}
-					else if(goku2.hitting ==2){
-					goku.health =goku.health - 20;
-					}
-
-				}
-				if(goku.health<=0){
-				alert("player2 won");
-				goku2.posx = 400;
-				goku2.health= 100
-				goku.posx = 0;
-				goku.health = 100;
-				goku.state = goku.standing;
-				goku2.state = goku2.standing;
-				render();
-				}
-				goku2.hitting = 0;
-			}
-
-
 
 			function keydownHandler(event) {
 
                 switch (event.keyCode) {
-                    case 90:   	goku.state = goku.punching;
-					            goku.hitting = 1;
-								hitDetection1();
-                                break;
-                    case 88:   	goku.state = goku.kicking;
-								goku.hitting = 2;
-								hitDetection1();
+									// press q to punch
+                case 81:
+									 	CharacterSprite.state = CharacterSprite.punching;
+						       	CharacterSprite.hitting = 1;
+										hitDetection1();
+                  break;
 
-                                break;
-                    case 67:   	goku.state = goku.charging;
-								goku.hitting = 3;
-								hitDetection1();
-                                break;
-					case 68:	//right
-								goku.posx+=10;
-								if(goku.posx >=400){
-								goku.posx = 400;
-								}
-								render();
-								break;
-					case 65:	//left
-								goku.posx-=10;
-								if(goku.posx <=0 ){
-								goku.posx= 0;
-								}
+								// press w to kick
+              	case 87:
+										CharacterSprite.state = CharacterSprite.kicking;
+										CharacterSprite.hitting = 2;
+										hitDetection1();
+            			break;
 
+								// press e to block
+                case 69:
+										CharacterSprite.state = CharacterSprite.block;
+										CharacterSprite.hitting = 3;
+										hitDetection1();
+                  break;
 
-								render();
-								break;
-					case 87:	//upw
-								goku.state = goku.jumping;
-								break;
-					case 83:	//down
-								goku.state = goku.crouching;
-                                break;
+									// right arrow key to go right
+								case 39:	//right
+											CharacterSprite.posx+=10;
+											if(CharacterSprite.posx >=600){
+											CharacterSprite.posx = 600;
+											}
+											render();
+											break;
 
+								// left arrow key to go left
+								case 37:	//left
+											CharacterSprite.posx-=10;
+											if(CharacterSprite.posx <=0 ){
+											CharacterSprite.posx= 0;
+											}
 
+											render();
+											break;
 
-					//goku2
-                    case 74:   	goku2.state = goku2.punching;
-								goku2.hitting = 1;
-								hitDetection2();
-                                break;
-                    case 75:   	goku2.state = goku2.kicking;
-								goku2.hitting = 2;
-								hitDetection2();
-                                break;
-                    case 76:   	goku2.state = goku2.charging;
-								goku2.hitting = 3;
-                                hitDetection2();
-								break;
-					case 39:	//right
-								goku2.posx+=10;
-								if(goku2.posx >=400){
-								goku2.posx = 400;
-								}
-								render();
-								break;
-					case 37:	//left
-								goku2.posx-=10;
-									if(goku2.posx <=0 ){
-								goku2.posx= 0;
-								}
-								render();
-								break;
-					case 38:	//up
-								goku2.state = goku2.jumping;
-								break;
-					case 40:	//down
-								goku2.state = goku2.crouching;
-                                break;
-                    default:	goku.state = goku.standing;
-								goku2.state = goku2.standing;
-                                break;
                 }
-
-				context.clearRect(0,0,500,200);
+				context.clearRect(0,0,605,800);
 				context.drawImage(background,0,0);
 				render();
 			}
 
 			function render() {
 			//health bars
-			if(goku.health>90)
+			if(CharacterSprite.health>90)
 			{context.drawImage(healthgoku,12, 12, 275, 25, 10,10,270,15);}
-			else if(goku.health==90)
+			else if(CharacterSprite.health==90)
 			{context.drawImage(healthgoku,12, 40, 275, 25, 10,10,270,15);}
-			else if(goku.health==80)
+			else if(CharacterSprite.health==80)
 			{context.drawImage(healthgoku,12, 68, 275, 25, 10,10,270,15);}
-			else if(goku.health==70)
+			else if(CharacterSprite.health==70)
 			{context.drawImage(healthgoku,12, 92, 275, 25, 10,10,270,15);}
-			else if(goku.health==60)
+			else if(CharacterSprite.health==60)
 			{context.drawImage(healthgoku,12, 123, 275, 25, 10,10,270,15);}
-			else if(goku.health==50)
+			else if(CharacterSprite.health==50)
 			{context.drawImage(healthgoku,12, 151, 275, 25, 10,10,270,15);}
-			else if(goku.health==40)
+			else if(CharacterSprite.health==40)
 			{context.drawImage(healthgoku,12, 179, 275, 25, 10,10,270,15);}
-			else if(goku.health==30)
+			else if(CharacterSprite.health==30)
 			{context.drawImage(healthgoku,12, 207, 275, 25, 10,10,270,15);}
-			else if(goku.health==20)
+			else if(CharacterSprite.health==20)
 			{context.drawImage(healthgoku,12, 235, 275, 25, 10,10,270,15);}
-			else if(goku.health==10)
+			else if(CharacterSprite.health==10)
 			{context.drawImage(healthgoku,12, 263, 275, 25, 10,10,270,15);}
-			else if(goku.health==0)
+			else if(CharacterSprite.health==0)
 			{context.drawImage(healthgoku,12, 291, 275, 25, 10,10,270,15);}
 
 
+				//ChunLi positions and states
+				if(checkCharacter == 1){
+						switch(CharacterSprite.state) {
+							case CharacterSprite.standing:
+								context.drawImage(
+									 CharacterLiImage,
+									 0, 0, 85, 115,
+									 CharacterSprite.posx, CharacterSprite.posy, 150, 150
+								 );
+								break;
 
-			if(goku2.health>90)
-			{context.drawImage(healthgoku2,12, 12, 275, 25, 220,27,270,15);}
-			else if(goku2.health==90)
-			{context.drawImage(healthgoku2,12, 40, 275, 25, 220,27,270,15);}
-			else if(goku2.health==80)
-			{context.drawImage(healthgoku2,12, 68, 275, 25, 220,27,270,15);}
-			else if(goku2.health==70)
-			{context.drawImage(healthgoku2,12, 92, 275, 25, 220,27,270,15);}
-			else if(goku2.health==60)
-			{context.drawImage(healthgoku2,12, 123, 275, 25, 220,27,270,15);}
-			else if(goku2.health==50)
-			{context.drawImage(healthgoku2,12, 151, 275, 25, 220,27,270,15);}
-			else if(goku2.health==40)
-			{context.drawImage(healthgoku2,12, 179, 275, 25,220,27,270,15);}
-			else if(goku2.health==30)
-			{context.drawImage(healthgoku2,12, 207, 275, 25, 220,27,270,15);}
-			else if(goku2.health==20)
-			{context.drawImage(healthgoku2,12, 235, 275, 25, 220,27,270,15);}
-			else if(goku2.health==10)
-			{context.drawImage(healthgoku2,12, 263, 275, 25, 220,27,270,15);}
-			else if(goku2.health<=0)
-			{context.drawImage(healthgoku2,12, 291, 275, 25, 220,27,270,15);}
-			//goku positions and states
-				switch(goku.state) {
-					case goku.standing: 	context.drawImage( gokuImage,0, 0, 100, 100,goku.posx, goku.posy, 100, 100 );
+							case CharacterSprite.punching:
+									context.drawImage(
+											CharacterLiImage,
+											228, 0, 200, 120,
+											CharacterSprite.posx, CharacterSprite.posy, 150, 150
+										);
 											break;
-					case goku.crouching: 	context.drawImage
-											( gokuImage,
-											100, 0, 100, 100,
-											goku.posx, goku.posy, 100, 100 );
-											break;
-					case goku.jumping: 		context.drawImage
-											( gokuImage,
-											400, 0, 100, 100,
-											goku.posx, goku.posy, 100, 100 );
-											break;
-					case goku.punching: 	context.drawImage
-											( gokuImage,
-											200, 0, 100, 100,
-											goku.posx, goku.posy, 100, 100 );
-											break;
-					case goku.kicking: 		context.drawImage
-											( gokuImage,
-											300, 0, 100, 100,
-											goku.posx, goku.posy, 100, 100 );
-											break;
-					case goku.charging: 	context.drawImage
-											( gokuImage,
-											500, 0, 100, 100,
-											goku.posx, goku.posy, 100, 100 );
-											break;
-					}
-				switch(goku2.state) {
-					case goku2.standing: 	context.drawImage
-											( goku2Image,
-											0, 0, 100, 100,
-											goku2.posx, goku2.posy, 100, 100 );
-											break;
-					case goku2.crouching: 	context.drawImage
-											( goku2Image,
-											100, 0, 100, 100,
-											goku2.posx, goku2.posy, 100, 100 );
-											break;
-					case goku2.jumping: 		context.drawImage
-											( goku2Image,
-											400, 0, 100, 100,
-											goku2.posx, goku2.posy, 100, 100 );
-											break;
-					case goku2.punching: 	context.drawImage
-											( goku2Image,
-											200, 0, 100, 100,
-											goku2.posx, goku2.posy, 100, 100 );
-											break;
-					case goku2.kicking: 		context.drawImage
-											( goku2Image,
-											300, 0, 100, 100,
-											goku2.posx, goku2.posy, 100, 100 );
-											break;
-					case goku2.charging: 	context.drawImage
-											( gokuImage,
-											500, 0, 100, 100,
-											goku2.posx, goku2.posy, 100, 100 );
-											break;
-					}
-			}
+							case CharacterSprite.kicking:
+									context.drawImage(
+										CharacterLiImage,
+										85, 0, 155, 100,
+										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+									 );
+										break;
+							case CharacterSprite.block:
+								  context.drawImage(
+										CharacterLiImage,
+										430, 0, 100, 120,
+										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+									);
+										break;
+							}
+				}
 
+			if(checkCharacter == 2){
+						// Makoto positions and states
+						switch(CharacterSprite.state) {
+							case CharacterSprite.standing:
+								context.drawImage(
+									 CharacterLiImage,
+									 0, 0, 110, 115,
+									 CharacterSprite.posx, CharacterSprite.posy, 150, 150
+								 );
+								break;
+
+							case CharacterSprite.punching:
+									context.drawImage(
+											CharacterLiImage,
+											255, 0, 180, 120,
+											CharacterSprite.posx, CharacterSprite.posy, 150, 150
+										);
+											break;
+							case CharacterSprite.kicking:
+									context.drawImage(
+										CharacterLiImage,
+										110, 0, 155, 100,
+										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+									 );
+										break;
+							case CharacterSprite.block:
+									context.drawImage(
+										CharacterLiImage,
+										430, 0, 100, 120,
+										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+									);
+										break;
+							}
+				}
+
+		}
+	}
+}
 		});
 	</script>
 </head>
 <body>
 
-	<canvas id="myCanvas" height="200" width="500"></canvas>
+	<canvas id="myCanvas" height="605" width="800"></canvas>
 
 </body>
 </html>
