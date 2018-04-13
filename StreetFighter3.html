@@ -13,6 +13,12 @@
 			var checkCharacter;
 			var AICharacter;
 
+			var RIGHT = 39;
+			var LEFT = 37;
+			//Directions
+			var moveRight = false;
+			var moveLeft = false;
+
 			if(CheckChoice == false){
 						// player icon image
 						var player = new Image();
@@ -51,7 +57,15 @@
 									    left: function() { return this.sourceX; },
 											right: function() { return (this.sourceX + this.sourceWidth); },
 										  top: function() { return this.sourceY; },
-									    bottom: function() { return (this.sourceY + this.sourceHeight); }
+									    bottom: function() { return (this.sourceY + this.sourceHeight); },
+											halfWidth: function()
+										  {
+										    return this.width / 2;
+										  },
+										  halfHeight: function()
+										  {
+										    return this.height / 2;
+										  }
 							  };
 
 								var Sean = {
@@ -66,7 +80,15 @@
 										left: function() { return this.sourceX; },
 										right: function() { return (this.sourceX + this.sourceWidth); },
 										top: function() { return this.sourceY; },
-										bottom: function() { return (this.sourceY + this.sourceHeight); }
+										bottom: function() { return (this.sourceY + this.sourceHeight); },
+										halfWidth: function()
+									  {
+									    return this.width / 2;
+									  },
+									  halfHeight: function()
+									  {
+									    return this.height / 2;
+									  }
 							};
 
 
@@ -84,7 +106,15 @@
 						              left: function() { return this.sourceX; },
 						              right: function() { return (this.sourceX + this.sourceWidth); },
 						              top: function() { return this.sourceY; },
-						              bottom: function() { return (this.sourceY + this.sourceHeight); }
+						              bottom: function() { return (this.sourceY + this.sourceHeight); },
+													halfWidth: function()
+												  {
+												    return this.width / 2;
+												  },
+												  halfHeight: function()
+												  {
+												    return this.height / 2;
+												  }
 						          };
 
 											// Makoto icon object
@@ -100,7 +130,15 @@
 														left: function() { return this.sourceX; },
 												  	right: function() { return (this.sourceX + this.sourceWidth); },
 														top: function() { return this.sourceY; },
-														bottom: function() { return (this.sourceY + this.sourceHeight); }
+														bottom: function() { return (this.sourceY + this.sourceHeight); },
+														halfWidth: function()
+													  {
+													    return this.width / 2;
+													  },
+													  halfHeight: function()
+													  {
+													    return this.height / 2;
+													  }
 													};
 
 
@@ -220,6 +258,7 @@
 											      else {
 																buttonPress = false;
 														}
+
 													  //Render the sprite object
 															 render();
 									 }
@@ -250,12 +289,42 @@
 
 						};
 
+
+
 function Play(CheckChoice,checkCharacter, AICharacter){
 			if(CheckChoice == true){
 				context.clearRect(0,0,605,800);
 
 			var CharacterSprite=
 			{
+				sourceX: 0,
+				sourceY: 340,
+				sourceWidth: 64,
+				sourceHeight: 64,
+				vx: 0,
+				vy: 0,
+
+				centerX: function()
+				{
+					return this.sourceX + (this.sourceWidth / 2);
+				},
+				centerY: function()
+				{
+					return this.sourceY + (this.sourceHeight / 2);
+				},
+				left: function() { return this.sourceX; },
+				right: function() { return (this.sourceX + this.sourceWidth); },
+				top: function() { return this.sourceY; },
+				bottom: function() { return (this.sourceY + this.sourceHeight); },
+				halfWidth: function()
+				{
+					return this.sourceWidth / 2;
+				},
+				halfHeight: function()
+				{
+					return this.sourceHeight / 2;
+				},
+
 				health:100,
 				hitting:0,
 				standing:0,
@@ -265,13 +334,42 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				kicking:4,
 				charging:5,
 
-				posx:0,
-				posy:340,
 				state:0
 			};
 
 			var AISprite=
 			{
+				sourceX: 600,
+				sourceY: 340,
+				sourceWidth: 64,
+				sourceHeight: 64,
+				x: 150,
+				y: 250,
+				vx: 0,
+				vy: 0,
+
+				centerX: function()
+				{
+					return this.sourceX + (this.sourceWidth / 2);
+				},
+				centerY: function()
+				{
+					return this.sourceY + (this.sourceHeight / 2);
+				},
+				left: function() { return this.sourceX; },
+				right: function() { return (this.sourceX + this.sourceWidth); },
+				top: function() { return this.sourceY; },
+				bottom: function() { return (this.sourceY + this.sourceHeight); },
+				halfWidth: function()
+				{
+					return this.sourceWidth / 2;
+				},
+				halfHeight: function()
+				{
+					return this.sourceHeight / 2;
+				},
+
+
 				health:100,
 				hitting:0,
 				standing:0,
@@ -281,8 +379,6 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				kicking:2,
 				charging:5,
 
-				posx:600,
-				posy:340,
 				state:0
 			};
 
@@ -301,15 +397,15 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				};
 
 			if(checkCharacter == 1){
-					var CharacterLiImage = new Image();
-					CharacterLiImage.addEventListener("load", render, false);
-					CharacterLiImage.src = "Chun-Li.png";
+					var CharacterImage = new Image();
+					CharacterImage.addEventListener("load", render, false);
+					CharacterImage.src = "Chun-Li.png";
 			}
 
 			if(checkCharacter == 2){
-				var CharacterLiImage = new Image();
-				CharacterLiImage.addEventListener("load", render, false);
-				CharacterLiImage.src = "Makoto.png";
+				var CharacterImage = new Image();
+				CharacterImage.addEventListener("load", render, false);
+				CharacterImage.src = "Makoto.png";
 		}
 
 		if(AICharacter == 1){
@@ -344,7 +440,10 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 									CharacterSprite.health = 100;
 							}
 					}
-				// if(goku2.posx-goku.posx<=40)
+					if(CharacterSprite.hitting==1){
+							AISprite.health-=5;
+					}
+				// if(goku2.sourceX-goku.sourceX<=40)
 				// {
 				// 		if(goku.hitting == 1){
 				// 		goku2.health= goku2.health -= 10;
@@ -356,9 +455,9 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				// }
 				// if(goku2.health<=0){
 				// 		alert("player1 won");
-				// 		goku2.posx = 400;
+				// 		goku2.sourceX = 400;
 				// 		goku2.health= 100
-				// 		goku.posx = 0;
+				// 		goku.sourceX = 0;
 				// 		goku.health = 100;
 				// 		goku.state = goku.standing;
 				// 		goku2.state = goku2.standing;
@@ -366,6 +465,106 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				//
 				// }
 				CharacterSprite.hitting = 0;
+			}
+
+
+
+			window.addEventListener("keydown", function(event)
+			{
+			  switch(event.keyCode)
+			  {
+				  case LEFT:
+				    moveLeft = true;
+				    break;
+
+				  case RIGHT:
+				    moveRight = true;
+				    break;
+			  }
+			}, false);
+			window.addEventListener("keyup", function(event)
+			{
+			  switch(event.keyCode)
+			  {
+				  case LEFT:
+				    moveLeft = false;
+				    break;
+
+				  case RIGHT:
+				    moveRight = false;
+				    break;
+			  }
+			}, false);
+
+			function update()
+			{
+			  //The animation loop
+			  requestAnimationFrame(update, canvas);
+
+			  //Left
+			  if(moveLeft && !moveRight)
+			  {
+			    CharacterSprite.vx = 5;
+					AISprite.vx = -5;
+			  }
+			  //Right
+			  if(moveRight && !moveLeft)
+			  {
+					CharacterSprite.vx = -5;
+					AISprite.vx = 5;
+			  }
+
+			  //Set the velocity to zero if none of the keys are being pressed
+			  if(!moveLeft && !moveRight)
+			  {
+			    blueCircle.vx = 0;
+			  }
+
+			  //Move
+			  CharacterSprite.sourceX += CharacterSprite.vx;
+				AISprite.sourceX += AISprite.vx;
+
+			  //Use hitTestCircle to check for a collision and
+			  //return the result (true or false) to the collision variable
+			  blockCollision(CharacterSprite, AISprite);
+
+			  //Render the sprites
+			  render();
+			}
+
+			function blockCollision(p1, p2)
+			{
+				//Calculate the vector between the circles’ center points
+				var vx = p1.centerX() - p2.centerX();
+				var vy = p1.centerY() - p2.centerY();
+
+				//Find the distance between the circles by calculating
+				//the vector's magnitude (how long the vector is)
+				var magnitude = Math.sqrt(vx * vx + vy * vy);
+
+				//Add together the circles' combined half-widths
+				var totalRadii = p1.halfWidth() + p2.halfWidth();
+
+				//Figure out if there's a collision
+				if(magnitude < totalRadii)
+				{
+					console.log("collision");
+					//Yes, a collision is happening.
+					//Find the amount of overlap between the circles
+					var overlap = totalRadii - magnitude;
+
+					//Normalize the vector.
+					//These numbers tell us the direction of the collision
+					var dx = vx / magnitude;
+					var dy = vy / magnitude;
+					//Move circle 1 out of the collision by multiplying
+					//the overlap with the normalized vector and add it to
+					//circle 1's position
+					p1.sourceX += overlap * dx;
+					p1.sourceY += overlap * dy;
+					p2.sourceX -= overlap * dx;
+					p2.sourceY -= overlap * dy;
+				}
 			}
 
 			function keydownHandler(event) {
@@ -393,34 +592,6 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 										CharacterSprite.hitting = 3;
 										hitDetection1();
                   break;
-
-									// right arrow key to go right
-								case 39:	//right
-											CharacterSprite.posx+=10;
-											if(CharacterSprite.posx >=600){
-											CharacterSprite.posx = 600;
-											}
-											AISprite.posx-=10;
-											if(AISprite.posx <=0){
-											AISprite.posx = 0;
-											}
-											render();
-											break;
-
-								// left arrow key to go left
-								case 37:	//left
-											CharacterSprite.posx-=10;
-											if(CharacterSprite.posx <=0 ){
-											CharacterSprite.posx= 0;
-											}
-											AISprite.posx+=10;
-											if(AISprite.posx >=600){
-											AISprite.posx = 600;
-											}
-
-											render();
-											break;
-
                 }
 				context.clearRect(0,0,605,800);
 				context.drawImage(background,0,0);
@@ -482,31 +653,31 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 						switch(CharacterSprite.state) {
 							case CharacterSprite.standing:
 								context.drawImage(
-									 CharacterLiImage,
+									 CharacterImage,
 									 0, 0, 85, 115,
-									 CharacterSprite.posx, CharacterSprite.posy, 150, 150
+									 CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 								 );
 								break;
 
 							case CharacterSprite.punching:
 									context.drawImage(
-											CharacterLiImage,
+											CharacterImage,
 											228, 0, 200, 120,
-											CharacterSprite.posx, CharacterSprite.posy, 150, 150
+											CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 										);
 											break;
 							case CharacterSprite.kicking:
 									context.drawImage(
-										CharacterLiImage,
+										CharacterImage,
 										85, 0, 155, 100,
-										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+										CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 									 );
 										break;
 							case CharacterSprite.block:
 								  context.drawImage(
-										CharacterLiImage,
+										CharacterImage,
 										430, 0, 100, 120,
-										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+										CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 									);
 										break;
 							}
@@ -517,31 +688,31 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 						switch(CharacterSprite.state) {
 							case CharacterSprite.standing:
 								context.drawImage(
-									 CharacterLiImage,
+									 CharacterImage,
 									 0, 0, 110, 115,
-									 CharacterSprite.posx, CharacterSprite.posy, 150, 150
+									 CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 								 );
 								break;
 
 							case CharacterSprite.punching:
 									context.drawImage(
-											CharacterLiImage,
+											CharacterImage,
 											255, 0, 180, 120,
-											CharacterSprite.posx, CharacterSprite.posy, 150, 150
+											CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 										);
 											break;
 							case CharacterSprite.kicking:
 									context.drawImage(
-										CharacterLiImage,
+										CharacterImage,
 										110, 0, 155, 100,
-										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+										CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 									 );
 										break;
 							case CharacterSprite.block:
 									context.drawImage(
-										CharacterLiImage,
+										CharacterImage,
 										430, 0, 100, 120,
-										CharacterSprite.posx, CharacterSprite.posy, 150, 150
+										CharacterSprite.sourceX, CharacterSprite.sourceY, 150, 150
 									);
 										break;
 							}
@@ -554,7 +725,7 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 									context.drawImage(
 										 AIImage,
 										 169, 0, 91, 160,
-										 AISprite.posx, AISprite.posy, 150, 150
+										 AISprite.sourceX, AISprite.sourceY, 150, 150
 									 );
 									break;
 
@@ -562,21 +733,21 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 										context.drawImage(
 												AIImage,
 												433, 0, 122, 160,
-												AISprite.posx, AISprite.posy, 150, 150
+												AISprite.sourceX, AISprite.sourceY, 150, 150
 											);
 												break;
 								case CharacterSprite.kicking:
 										context.drawImage(
 											AIImage,
 											0, 0, 120, 160,
-											AISprite.posx, AISprite.posy, 150, 150
+											AISprite.sourceX, AISprite.sourceY, 150, 150
 										 );
 											break;
 								case CharacterSprite.block:
 										context.drawImage(
 											AIImage,
 											316, 0, 82, 160,
-											AISprite.posx, AISprite.posy, 150, 150
+											AISprite.sourceX, AISprite.sourceY, 150, 150
 										);
 											break;
 								}
@@ -589,7 +760,7 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 										context.drawImage(
 											 AIImage,
 											 0, 0, 80, 160,
-											 AISprite.posx, AISprite.posy, 150, 150
+											 AISprite.sourceX, AISprite.sourceY, 150, 150
 										 );
 										break;
 
@@ -597,21 +768,21 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 											context.drawImage(
 													AIImage,
 													216, 0, 128, 160,
-													AISprite.posx, AISprite.posy, 150, 150
+													AISprite.sourceX, AISprite.posy, 150, 150
 												);
 													break;
 									case CharacterSprite.kicking:
 											context.drawImage(
 												AIImage,
 												370, 0, 144, 160,
-												AISprite.posx, AISprite.posy, 150, 150
+												AISprite.sourceX, AISprite.sourceY, 150, 150
 											 );
 												break;
 									case CharacterSprite.block:
 											context.drawImage(
 												AIImage,
 												106, 0, 84, 160,
-												AISprite.posx, AISprite.posy, 150, 150
+												AISprite.sourceX, AISprite.sourceY, 150, 150
 											);
 												break;
 									}
