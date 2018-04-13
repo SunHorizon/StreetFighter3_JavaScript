@@ -8,11 +8,12 @@
 			var canvas = $("#myCanvas");
 			var context = canvas.get(0).getContext("2d");
 
-			var CheckChooce = false;
+			var CheckChoice = false;
 			var buttonPress = false;
 			var checkCharacter;
+			var AICharacter;
 
-			if(CheckChooce == false){
+			if(CheckChoice == false){
 						// player icon image
 						var player = new Image();
 								player.src = "Player.png";
@@ -35,6 +36,40 @@
 									// get Mouse Coordinates
 									var mouseX = 0;
 							    var mouseY = 0;
+
+
+									// Ryu icon object
+									var Ryu = {
+											image: "RyuIcon.jpg",
+									    sourceX: 400,
+											sourceY: 200,
+											sourceWidth: 64,
+											sourceHeight: 64,
+
+											 //Getters to define the left, right, top and bottom sides, these functions are use to get the parameter of our shape in order to determine whether our mouse falls within
+
+									    left: function() { return this.sourceX; },
+											right: function() { return (this.sourceX + this.sourceWidth); },
+										  top: function() { return this.sourceY; },
+									    bottom: function() { return (this.sourceY + this.sourceHeight); }
+							  };
+
+								var Sean = {
+										image: "SeanIcon.png",
+										sourceX: 400,
+										sourceY: 300,
+										sourceWidth: 64,
+										sourceHeight: 64,
+
+										 //Getters to define the left, right, top and bottom sides, these functions are use to get the parameter of our shape in order to determine whether our mouse falls within
+
+										left: function() { return this.sourceX; },
+										right: function() { return (this.sourceX + this.sourceWidth); },
+										top: function() { return this.sourceY; },
+										bottom: function() { return (this.sourceY + this.sourceHeight); }
+							};
+
+
 
 									// ChunLi icon object
 									var ChunLi = {
@@ -79,6 +114,16 @@
 											MakotoImage.addEventListener("load", render, false);
 											MakotoImage.src = Makoto.image;
 
+											// get the  Ryu image
+											var RyuImage = new Image();
+											RyuImage.addEventListener("load", render, false);
+											RyuImage.src = Ryu.image;
+
+											// get the  Makoto image
+											var SeanImage = new Image();
+											SeanImage.addEventListener("load", render, false);
+											SeanImage.src = Sean.image;
+
 
 
 
@@ -94,7 +139,7 @@
 											                   //console.log(mouseX + " " + mouseY);
 											                   //keep calling the update function and update canvas object on each movement
 											                   // requestAnimationFrame(update, canvas);
-																				 if(CheckChooce == false){
+																				 if(CheckChoice == false){
 																					 update();
 																			 }
 									        }, false);
@@ -103,6 +148,7 @@
 													function hitTestPoint(pointX, pointY) {
 												                    var hit = false;
 																						checkCharacter = 0;
+																						//chun li
 												                    if(pointX > ChunLi.left()
 												                    && pointX < ChunLi.right()
 												                    && pointY > ChunLi.top()
@@ -110,7 +156,9 @@
 												                    {
 																							hit = true;
 																							checkCharacter = 1;
+																							AICharacter = 1;
 																						}
+																						//makoto
 																						if(pointX > Makoto.left()
 																					 && pointX < Makoto.right()
 																					 && pointY > Makoto.top()
@@ -118,10 +166,29 @@
 																					 {
 																						 hit = true;
 																						 checkCharacter = 2;
+																						 AICharacter = 2;
 																					 }
+																				/*	 //ryu
+																					 if(pointX > Ryu.left()
+																					&& pointX < Ryu.right()
+																					&& pointY > Ryu.top()
+																					&& pointY < Ryu.bottom())
+																					{
+																						hit = true;
+																						checkCharacter = 3;
+																					}
+																					//Sean
+																					if(pointX > Sean.left()
+																				 && pointX < Sean.right()
+																				 && pointY > Sean.top()
+																				 && pointY < Sean.bottom())
+																				 {
+																					 hit = true;
+																					 checkCharacter = 4;
+																				 }*/
 												                        return hit;
 
-												                     }
+										 }
 
 										// Checking for key press
 										function keydownHandler(event) {
@@ -143,10 +210,10 @@
 													  {
 																// if button press = true and mouse collision
 																	if(buttonPress == true){
-																		CheckChooce = true;
+																		CheckChoice = true;
 																		// run the play function
 																		message = checkCharacter;
-																		Play(CheckChooce,checkCharacter);
+																		Play(CheckChoice,checkCharacter, AICharacter);
 																		console.log(message);
 																 	}
 												    }
@@ -165,23 +232,26 @@
 										ChunLi.sourceX, ChunLi.sourceY,
 	                  ChunLi.sourceWidth, ChunLi.sourceHeight);
 
-
 										//Draw Makoto
-											context.drawImage(MakotoImage,
-											Makoto.sourceX, Makoto.sourceY,
-											Makoto.sourceWidth, Makoto.sourceHeight);
+										context.drawImage(MakotoImage,
+										Makoto.sourceX, Makoto.sourceY,
+	                  Makoto.sourceWidth, Makoto.sourceHeight);
+
+										//Draw Ryu
+										context.drawImage(RyuImage,
+										Ryu.sourceX, Ryu.sourceY,
+	                  Ryu.sourceWidth, Ryu.sourceHeight);
+
+										//Draw Sean
+										context.drawImage(SeanImage,
+										Sean.sourceX, Sean.sourceY,
+										Sean.sourceWidth, Sean.sourceHeight);
 								}
 
 						};
 
-								// context.clearRect(0,0,605,800);
-								// context.drawImage(player,0,0);
-
-								// 430, 0, 100, 120,
-								// goku.posx, goku.posy, 150, 150
-
-function Play(CheckChooce,checkCharacter){
-			if(CheckChooce == true){
+function Play(CheckChoice,checkCharacter, AICharacter){
+			if(CheckChoice == true){
 				context.clearRect(0,0,605,800);
 
 			var CharacterSprite=
@@ -200,9 +270,29 @@ function Play(CheckChooce,checkCharacter){
 				state:0
 			};
 
-			var healthgoku = new Image();
-				healthgoku.src = "gokuhealth.png";
-				healthgoku.addEventListener("load",render,false);
+			var AISprite=
+			{
+				health:100,
+				hitting:0,
+				standing:0,
+				crouching:3,
+				jumping:4,
+				punching:1,
+				kicking:2,
+				charging:5,
+
+				posx:600,
+				posy:340,
+				state:0
+			};
+
+			var healthPlayer = new Image();
+				healthPlayer.src = "gokuhealth.png";
+				healthPlayer.addEventListener("load",render,false);
+
+		var healthAI = new Image();
+		  	healthAI.src = "gokuhealth.png";
+				healthAI.addEventListener("load",render,false);
 
 			var background = new Image();
 				background.src = "background.png";
@@ -222,12 +312,25 @@ function Play(CheckChooce,checkCharacter){
 				CharacterLiImage.src = "Makoto.png";
 		}
 
+		if(AICharacter == 1){
+			var AIImage = new Image();
+			AIImage.addEventListener("load", render, false);
+			AIImage.src = "RyuRight.png";
+	}
+
+	if(AICharacter == 2){
+		var AIImage = new Image();
+		AIImage.addEventListener("load", render, false);
+		AIImage.src = "SeanRight.png";
+}
+
 			window.addEventListener("keydown", keydownHandler, false);
 			window.addEventListener("keyup",keyupHandler,false);
 			render();
 			function keyupHandler() {
 					context.clearRect(0,0,605,800);
 					CharacterSprite.state = CharacterSprite.standing;
+					AISprite.state = AISprite.standing;
 					context.drawImage(background,0,0);
 					render();
 			}
@@ -272,6 +375,8 @@ function Play(CheckChooce,checkCharacter){
                 case 81:
 									 	CharacterSprite.state = CharacterSprite.punching;
 						       	CharacterSprite.hitting = 1;
+										//var a = Math.floor((Math.random() * 2) + 1);
+										//AISprite.state = a;
 										hitDetection1();
                   break;
 
@@ -295,6 +400,10 @@ function Play(CheckChooce,checkCharacter){
 											if(CharacterSprite.posx >=600){
 											CharacterSprite.posx = 600;
 											}
+											AISprite.posx-=10;
+											if(AISprite.posx <=0){
+											AISprite.posx = 0;
+											}
 											render();
 											break;
 
@@ -303,6 +412,10 @@ function Play(CheckChooce,checkCharacter){
 											CharacterSprite.posx-=10;
 											if(CharacterSprite.posx <=0 ){
 											CharacterSprite.posx= 0;
+											}
+											AISprite.posx+=10;
+											if(AISprite.posx >=600){
+											AISprite.posx = 600;
 											}
 
 											render();
@@ -317,27 +430,51 @@ function Play(CheckChooce,checkCharacter){
 			function render() {
 			//health bars
 			if(CharacterSprite.health>90)
-			{context.drawImage(healthgoku,12, 12, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 12, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==90)
-			{context.drawImage(healthgoku,12, 40, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 40, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==80)
-			{context.drawImage(healthgoku,12, 68, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 68, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==70)
-			{context.drawImage(healthgoku,12, 92, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 92, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==60)
-			{context.drawImage(healthgoku,12, 123, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 123, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==50)
-			{context.drawImage(healthgoku,12, 151, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 151, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==40)
-			{context.drawImage(healthgoku,12, 179, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 179, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==30)
-			{context.drawImage(healthgoku,12, 207, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 207, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==20)
-			{context.drawImage(healthgoku,12, 235, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 235, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==10)
-			{context.drawImage(healthgoku,12, 263, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 263, 275, 25, 10,10,270,15);}
 			else if(CharacterSprite.health==0)
-			{context.drawImage(healthgoku,12, 291, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthPlayer,12, 291, 275, 25, 10,10,270,15);}
+
+			//Enemy health bar
+			if(AISprite.health>90)
+			{context.drawImage(healthAI,12, 12, 275, 25, 490,10,270,15);}
+			else if(AISprite.health==90)
+			{context.drawImage(healthAI,12, 40, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==80)
+			{context.drawImage(healthAI,12, 68, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==70)
+			{context.drawImage(healthAI,12, 92, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==60)
+			{context.drawImage(healthAI,12, 123, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==50)
+			{context.drawImage(healthAI,12, 151, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==40)
+			{context.drawImage(healthAI,12, 179, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==30)
+			{context.drawImage(healthAI,12, 207, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==20)
+			{context.drawImage(healthAI,12, 235, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==10)
+			{context.drawImage(healthAI,12, 263, 275, 25, 10,10,270,15);}
+			else if(AISprite.health==0)
+			{context.drawImage(healthAI,12, 291, 275, 25, 10,10,270,15);}
 
 
 				//ChunLi positions and states
@@ -409,6 +546,76 @@ function Play(CheckChooce,checkCharacter){
 										break;
 							}
 				}
+				//Ryu
+				if(AICharacter == 1){
+							// Makoto positions and states
+							switch(CharacterSprite.state) {
+								case CharacterSprite.standing:
+									context.drawImage(
+										 AIImage,
+										 169, 0, 91, 160,
+										 AISprite.posx, AISprite.posy, 150, 150
+									 );
+									break;
+
+								case CharacterSprite.punching:
+										context.drawImage(
+												AIImage,
+												433, 0, 122, 160,
+												AISprite.posx, AISprite.posy, 150, 150
+											);
+												break;
+								case CharacterSprite.kicking:
+										context.drawImage(
+											AIImage,
+											0, 0, 120, 160,
+											AISprite.posx, AISprite.posy, 150, 150
+										 );
+											break;
+								case CharacterSprite.block:
+										context.drawImage(
+											AIImage,
+											316, 0, 82, 160,
+											AISprite.posx, AISprite.posy, 150, 150
+										);
+											break;
+								}
+					}
+					//Ryu
+					if(AICharacter == 2){
+								// Makoto positions and states
+								switch(CharacterSprite.state) {
+									case CharacterSprite.standing:
+										context.drawImage(
+											 AIImage,
+											 0, 0, 80, 160,
+											 AISprite.posx, AISprite.posy, 150, 150
+										 );
+										break;
+
+									case CharacterSprite.punching:
+											context.drawImage(
+													AIImage,
+													216, 0, 128, 160,
+													AISprite.posx, AISprite.posy, 150, 150
+												);
+													break;
+									case CharacterSprite.kicking:
+											context.drawImage(
+												AIImage,
+												370, 0, 144, 160,
+												AISprite.posx, AISprite.posy, 150, 150
+											 );
+												break;
+									case CharacterSprite.block:
+											context.drawImage(
+												AIImage,
+												106, 0, 84, 160,
+												AISprite.posx, AISprite.posy, 150, 150
+											);
+												break;
+									}
+						}
 
 		}
 	}
