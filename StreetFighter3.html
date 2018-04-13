@@ -496,33 +496,45 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 			  }
 			}, false);
 
+			update();
 			function update()
 			{
 			  //The animation loop
-			  requestAnimationFrame(update, canvas);
+			  //requestAnimationFrame(update, canvas);
+
+				setTimeout(update, 16);
 
 			  //Left
 			  if(moveLeft && !moveRight)
 			  {
-			    CharacterSprite.vx = 5;
-					AISprite.vx = -5;
+			    CharacterSprite.vx = -5;
+					AISprite.vx = 5;
 			  }
 			  //Right
 			  if(moveRight && !moveLeft)
 			  {
-					CharacterSprite.vx = -5;
-					AISprite.vx = 5;
+					CharacterSprite.vx = 5;
+					AISprite.vx = -5;
 			  }
 
 			  //Set the velocity to zero if none of the keys are being pressed
 			  if(!moveLeft && !moveRight)
 			  {
-			    blueCircle.vx = 0;
+					CharacterSprite.vx = 0;
+					AISprite.vx = 0;
 			  }
 
 			  //Move
 			  CharacterSprite.sourceX += CharacterSprite.vx;
 				AISprite.sourceX += AISprite.vx;
+
+				if(CharacterSprite.sourceX < 0){
+					CharacterSprite.sourceX = 0;
+				}
+				if(AISprite.sourceX > 600){
+					AISprite.sourceX = 600;
+				}
+
 
 			  //Use hitTestCircle to check for a collision and
 			  //return the result (true or false) to the collision variable
@@ -599,6 +611,8 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 			}
 
 			function render() {
+
+			context.clearRect(0, 0, canvas.width, canvas.height);
 			//health bars
 			if(CharacterSprite.health>90)
 			{context.drawImage(healthPlayer,12, 12, 275, 25, 10,10,270,15);}
