@@ -19,6 +19,9 @@
 			var moveRight = false;
 			var moveLeft = false;
 
+			var CollisionCheck;
+
+
 			if(CheckChoice == false){
 						// player icon image
 						var player = new Image();
@@ -387,7 +390,7 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				healthPlayer.addEventListener("load",render,false);
 
 		var healthAI = new Image();
-		  	healthAI.src = "gokuhealth.png";
+		  	healthAI.src = "gokuhealthreverse.png";
 				healthAI.addEventListener("load",render,false);
 
 			var background = new Image();
@@ -433,38 +436,61 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 
 
 			function hitDetection1(){
+			  	console.log(CollisionCheck);
+					if(CharacterSprite.hitting == 1 && CollisionCheck == true){
+						console.log(CollisionCheck);
+							AISprite.health-=10;
+					}
+					if(CharacterSprite.hitting == 2 && CollisionCheck == true){
+						console.log(CollisionCheck);
+							AISprite.health-=20;
+					}
 
-					if(CharacterSprite.hitting==3){
-							CharacterSprite.health+=10
-							if(CharacterSprite.health>100){
-									CharacterSprite.health = 100;
-							}
-					}
-					if(CharacterSprite.hitting==1){
-							AISprite.health-=5;
-					}
-				// if(goku2.sourceX-goku.sourceX<=40)
-				// {
-				// 		if(goku.hitting == 1){
-				// 		goku2.health= goku2.health -= 10;
-				// 		}
-				// 		else if(goku.hitting ==2){
-				// 		goku2.health -=20;
-				// 		}
-				//
-				// }
-				// if(goku2.health<=0){
-				// 		alert("player1 won");
-				// 		goku2.sourceX = 400;
-				// 		goku2.health= 100
-				// 		goku.sourceX = 0;
-				// 		goku.health = 100;
-				// 		goku.state = goku.standing;
-				// 		goku2.state = goku2.standing;
-				// 		render();
-				//
-				// }
+					if(CharacterSprite.health<=0){
+						alert("You Lose!!!");
+						CharacterSprite.sourceX = 0;
+						CharacterSprite.sourcey = 340;
+						CharacterSprite.state = CharacterSprite.standing;
+						CharacterSprite.health = 100;
+
+
+						AISprite.sourceX = 600;
+						AISprite.sourcey = 340;
+						AISprite.state = CharacterSprite.standing;
+						AISprite.health = 100;
+						render();
+				}
+
 				CharacterSprite.hitting = 0;
+			}
+
+			function hitDetection2(){
+					console.log(CollisionCheck);
+					if(AISprite.hitting == 1 && CollisionCheck == true){
+						console.log(CollisionCheck);
+							CharacterSprite.health-=10;
+					}
+					if(AISprite.hitting == 2 && CollisionCheck == true){
+						console.log(CollisionCheck);
+							CharacterSprite.health-=20;
+					}
+
+					if(AISprite.health<=0){
+						alert("You Win!!!");
+						CharacterSprite.sourceX = 0;
+						CharacterSprite.sourcey = 340;
+						CharacterSprite.state = CharacterSprite.standing;
+						CharacterSprite.health = 100;
+
+
+						AISprite.sourceX = 600;
+						AISprite.sourcey = 340;
+						AISprite.state = CharacterSprite.standing;
+						AISprite.health = 100;
+						render();
+				}
+
+				AISprite.hitting = 0;
 			}
 
 
@@ -558,6 +584,7 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				var totalRadii = p1.halfWidth() + p2.halfWidth();
 
 				//Figure out if there's a collision
+						CollisionCheck = false;
 				if(magnitude < totalRadii)
 				{
 					console.log("collision");
@@ -576,6 +603,7 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 					p1.sourceY += overlap * dy;
 					p2.sourceX -= overlap * dx;
 					p2.sourceY -= overlap * dy;
+					CollisionCheck = true;
 				}
 			}
 
@@ -586,23 +614,36 @@ function Play(CheckChoice,checkCharacter, AICharacter){
                 case 81:
 									 	CharacterSprite.state = CharacterSprite.punching;
 						       	CharacterSprite.hitting = 1;
+
+										AISprite.state = AISprite.punching;
+										AISprite.hitting = 1;
 										//var a = Math.floor((Math.random() * 2) + 1);
 										//AISprite.state = a;
 										hitDetection1();
+										hitDetection2()
                   break;
 
 								// press w to kick
               	case 87:
 										CharacterSprite.state = CharacterSprite.kicking;
 										CharacterSprite.hitting = 2;
+
+										AISprite.state = AISprite.kicking;
+										AISprite.hitting = 2;
+
 										hitDetection1();
+										hitDetection2()
             			break;
 
 								// press e to block
                 case 69:
 										CharacterSprite.state = CharacterSprite.block;
 										CharacterSprite.hitting = 3;
+
+										AISprite.state = AISprite.block;
+										AISprite.hitting = 3;
 										hitDetection1();
+										hitDetection2()
                   break;
                 }
 				context.clearRect(0,0,605,800);
@@ -641,25 +682,25 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 			if(AISprite.health>90)
 			{context.drawImage(healthAI,12, 12, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==90)
-			{context.drawImage(healthAI,12, 40, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 40, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==80)
-			{context.drawImage(healthAI,12, 68, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 68, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==70)
-			{context.drawImage(healthAI,12, 92, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 92, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==60)
-			{context.drawImage(healthAI,12, 123, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 123, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==50)
-			{context.drawImage(healthAI,12, 151, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 151, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==40)
-			{context.drawImage(healthAI,12, 179, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 179, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==30)
-			{context.drawImage(healthAI,12, 207, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 207, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==20)
-			{context.drawImage(healthAI,12, 235, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 235, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==10)
-			{context.drawImage(healthAI,12, 263, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 263, 275, 25, 490,10,270,15);}
 			else if(AISprite.health==0)
-			{context.drawImage(healthAI,12, 291, 275, 25, 10,10,270,15);}
+			{context.drawImage(healthAI,12, 291, 275, 25, 490,10,270,15);}
 
 
 				//ChunLi positions and states
@@ -734,8 +775,8 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				//Ryu
 				if(AICharacter == 1){
 							// Makoto positions and states
-							switch(CharacterSprite.state) {
-								case CharacterSprite.standing:
+							switch(AISprite.state) {
+								case AISprite.standing:
 									context.drawImage(
 										 AIImage,
 										 169, 0, 91, 160,
@@ -743,21 +784,21 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 									 );
 									break;
 
-								case CharacterSprite.punching:
+								case AISprite.punching:
 										context.drawImage(
 												AIImage,
 												433, 0, 122, 160,
 												AISprite.sourceX, AISprite.sourceY, 150, 150
 											);
 												break;
-								case CharacterSprite.kicking:
+								case AISprite.kicking:
 										context.drawImage(
 											AIImage,
 											0, 0, 120, 160,
 											AISprite.sourceX, AISprite.sourceY, 150, 150
 										 );
 											break;
-								case CharacterSprite.block:
+								case AISprite.block:
 										context.drawImage(
 											AIImage,
 											316, 0, 82, 160,
@@ -769,8 +810,8 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 					//Ryu
 					if(AICharacter == 2){
 								// Makoto positions and states
-								switch(CharacterSprite.state) {
-									case CharacterSprite.standing:
+								switch(AISprite.state) {
+									case AISprite.standing:
 										context.drawImage(
 											 AIImage,
 											 0, 0, 80, 160,
@@ -785,14 +826,14 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 													AISprite.sourceX, AISprite.posy, 150, 150
 												);
 													break;
-									case CharacterSprite.kicking:
+									case AISprite.kicking:
 											context.drawImage(
 												AIImage,
 												370, 0, 144, 160,
 												AISprite.sourceX, AISprite.sourceY, 150, 150
 											 );
 												break;
-									case CharacterSprite.block:
+									case AISprite.block:
 											context.drawImage(
 												AIImage,
 												106, 0, 84, 160,
