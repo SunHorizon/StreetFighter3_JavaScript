@@ -331,11 +331,10 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				health:100,
 				hitting:0,
 				standing:0,
-				crouching:1,
-				jumping:2,
-				punching:3,
-				kicking:4,
-				charging:5,
+				punching:1,
+				kicking:2,
+				block:3,
+
 
 				state:0
 			};
@@ -376,11 +375,9 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				health:100,
 				hitting:0,
 				standing:0,
-				crouching:3,
-				jumping:4,
 				punching:1,
 				kicking:2,
-				charging:5,
+				block:3,
 
 				state:0
 			};
@@ -440,10 +437,33 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 					if(CharacterSprite.hitting == 1 && CollisionCheck == true){
 						console.log(CollisionCheck);
 							AISprite.health-=10;
+							if(AISprite.hitting == 3){
+								AISprite.health+=10;
+							}
 					}
+					if(AISprite.hitting == 1 && CollisionCheck == true){
+						console.log(CollisionCheck);
+							CharacterSprite.health-=10;
+
+							if(CharacterSprite.hitting == 3){
+								CharacterSprite.health+=10;
+							}
+					}
+
 					if(CharacterSprite.hitting == 2 && CollisionCheck == true){
 						console.log(CollisionCheck);
 							AISprite.health-=20;
+							if(AISprite.hitting == 3){
+								AISprite.health+=20;
+							}
+					}
+					if(AISprite.hitting == 2 && CollisionCheck == true){
+						console.log(CollisionCheck);
+							CharacterSprite.health-=20;
+
+							if(CharacterSprite.hitting == 3){
+								CharacterSprite.health+=20;
+							}
 					}
 
 					if(CharacterSprite.health<=0){
@@ -461,39 +481,24 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 						render();
 				}
 
-				CharacterSprite.hitting = 0;
+				if(AISprite.health<=0){
+					alert("You Win!!!");
+					CharacterSprite.sourceX = 0;
+					CharacterSprite.sourcey = 340;
+					CharacterSprite.state = CharacterSprite.standing;
+					CharacterSprite.health = 100;
+
+
+					AISprite.sourceX = 600;
+					AISprite.sourcey = 340;
+					AISprite.state = CharacterSprite.standing;
+					AISprite.health = 100;
+					render();
 			}
 
-			function hitDetection2(){
-					console.log(CollisionCheck);
-					if(AISprite.hitting == 1 && CollisionCheck == true){
-						console.log(CollisionCheck);
-							CharacterSprite.health-=10;
-					}
-					if(AISprite.hitting == 2 && CollisionCheck == true){
-						console.log(CollisionCheck);
-							CharacterSprite.health-=20;
-					}
-
-					if(AISprite.health<=0){
-						alert("You Win!!!");
-						CharacterSprite.sourceX = 0;
-						CharacterSprite.sourcey = 340;
-						CharacterSprite.state = CharacterSprite.standing;
-						CharacterSprite.health = 100;
-
-
-						AISprite.sourceX = 600;
-						AISprite.sourcey = 340;
-						AISprite.state = CharacterSprite.standing;
-						AISprite.health = 100;
-						render();
-				}
-
+				CharacterSprite.hitting = 0;
 				AISprite.hitting = 0;
 			}
-
-
 
 			window.addEventListener("keydown", function(event)
 			{
@@ -584,8 +589,12 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 				var totalRadii = p1.halfWidth() + p2.halfWidth();
 
 				//Figure out if there's a collision
-						CollisionCheck = false;
-				if(magnitude < totalRadii)
+
+
+			  if(magnitude > totalRadii){
+					CollisionCheck = false;
+				}
+				if(magnitude <= totalRadii)
 				{
 					console.log("collision");
 					//Yes, a collision is happening.
@@ -612,38 +621,39 @@ function Play(CheckChoice,checkCharacter, AICharacter){
                 switch (event.keyCode) {
 									// press q to punch
                 case 81:
-									 	CharacterSprite.state = CharacterSprite.punching;
+									 	CharacterSprite.state = 1;
 						       	CharacterSprite.hitting = 1;
 
-										AISprite.state = AISprite.punching;
-										AISprite.hitting = 1;
-										//var a = Math.floor((Math.random() * 2) + 1);
-										//AISprite.state = a;
+
+										var a = Math.floor((Math.random() * 3) + 1);
+										AISprite.state = a;
+										AISprite.hitting = a;
+
 										hitDetection1();
-										hitDetection2()
                   break;
 
 								// press w to kick
               	case 87:
-										CharacterSprite.state = CharacterSprite.kicking;
+										CharacterSprite.state = 2;
 										CharacterSprite.hitting = 2;
 
-										AISprite.state = AISprite.kicking;
-										AISprite.hitting = 2;
+										var a = Math.floor((Math.random() * 3) + 1);
+										AISprite.state = a;
+										AISprite.hitting = a;
 
 										hitDetection1();
-										hitDetection2()
             			break;
 
 								// press e to block
                 case 69:
-										CharacterSprite.state = CharacterSprite.block;
+										CharacterSprite.state = 3;
 										CharacterSprite.hitting = 3;
 
-										AISprite.state = AISprite.block;
-										AISprite.hitting = 3;
+										var a = Math.floor((Math.random() * 3) + 1);
+										AISprite.state = a;
+										AISprite.hitting = a;
+
 										hitDetection1();
-										hitDetection2()
                   break;
                 }
 				context.clearRect(0,0,605,800);
@@ -820,12 +830,12 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 										break;
 
 									case AISprite.punching:
-											context.drawImage(
-													AIImage,
-													216, 0, 128, 160,
-													AISprite.sourceX, AISprite.posy, 150, 150
-												);
-													break;
+										context.drawImage(
+											AIImage,
+											216, 0, 128, 160,
+											AISprite.sourceX, AISprite.sourceY, 150, 150
+										 );
+												break;
 									case AISprite.kicking:
 											context.drawImage(
 												AIImage,
