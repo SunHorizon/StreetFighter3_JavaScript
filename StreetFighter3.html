@@ -662,14 +662,14 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 										hitDetection1();
                   break;
                 }
-				context.clearRect(0,0,605,800);
-				context.drawImage(background,0,0);
+
 				render();
 			}
 
 			function render() {
 
 			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.drawImage(background,0,0);
 			//health bars
 			if(CharacterSprite.health>90)
 			{context.drawImage(healthPlayer,12, 12, 275, 25, 10,10,270,15);}
