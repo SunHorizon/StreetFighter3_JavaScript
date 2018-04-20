@@ -478,12 +478,18 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 						CharacterSprite.sourcey = 340;
 						CharacterSprite.state = CharacterSprite.standing;
 						CharacterSprite.health = 100;
-
+						CharacterSprite.vx = 0;
+						CharacterSprite.vy = 0;
 
 						AISprite.sourceX = 600;
 						AISprite.sourcey = 340;
 						AISprite.state = CharacterSprite.standing;
 						AISprite.health = 100;
+						AISprite.vx = 0;
+						AISprite.vy = 0;
+
+						moveRight = false;
+
 						render();
 				}
 
@@ -493,12 +499,18 @@ function Play(CheckChoice,checkCharacter, AICharacter){
 					CharacterSprite.sourcey = 340;
 					CharacterSprite.state = CharacterSprite.standing;
 					CharacterSprite.health = 100;
-
+					CharacterSprite.vx = 0;
+					CharacterSprite.vy = 0;
 
 					AISprite.sourceX = 600;
 					AISprite.sourcey = 340;
 					AISprite.state = CharacterSprite.standing;
 					AISprite.health = 100;
+					AISprite.vx = 0;
+					AISprite.vy = 0;
+
+				 moveRight = false;
+
 					render();
 			}
 
